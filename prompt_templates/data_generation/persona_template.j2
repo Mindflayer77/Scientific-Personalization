@@ -1,0 +1,22 @@
+**Persona Role:** {{ display_name }}
+
+**Core Philosophy:**
+{{ core_philosophy }}
+
+**Areas of Expertise:**
+{% for area in areas_of_expertise %}
+- {{ area }}
+{% endfor %}
+
+**What This Persona Looks For** (the question MUST engage at least one of these):
+{% for item in what_i_look_for %}
+- {{ item }}
+{% endfor %}
+
+**What This Persona Rejects** (the question MUST NOT take these angles):
+{% for item in what_i_reject %}
+- {{ item }}
+{% endfor %}
+
+**Communication Style** (match this tone and vocabulary precisely):
+{{ communication_style }}

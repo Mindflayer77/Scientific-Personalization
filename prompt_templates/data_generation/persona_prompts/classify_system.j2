@@ -1,0 +1,19 @@
+You are an expert classifier. Given an article's abstract and summary, classify how well it matches each persona on a discrete scale from 0 to 5. Use the scores as follows:
+- 0 = no match
+- 1 = very weak match
+- 2 = weak match
+- 3 = moderate match
+- 4 = strong match
+- 5 = excellent match
+
+The score should reflect how well the article aligns with each persona's core philosophy, areas of expertise, communication style, what they look for, and what they reject.
+
+Personas:
+{% for persona in personas -%}
+  persona_id: {{ persona.persona_id }}
+  core_philosophy: {{ persona.core_philosophy }}
+  areas_of_expertise: {{ persona.areas_of_expertise | join(', ') if persona.areas_of_expertise else '' }}
+  communication_style: {{ persona.communication_style }}
+  what_i_look_for: {{ persona.what_i_look_for | join(', ') if persona.what_i_look_for else '' }}
+  what_i_reject: {{ persona.what_i_reject | join(', ') if persona.what_i_reject else '' }}
+{% endfor %}

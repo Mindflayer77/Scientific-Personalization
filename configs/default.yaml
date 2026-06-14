@@ -1,0 +1,92 @@
+# Personalization Configuration File
+# This file contains all configuration parameters for training and evaluation
+
+# Data configuration
+data:
+  baseline:
+    sft_train: "data/sft.csv"
+    sft_val: "data/val_sft.csv"
+    sft_test: "data/test.csv"
+    dpo_train: data/perm2/step5.csv #"data/dpo.csv" #"data/cl_data.csv" #"data/cl_data.csv" #"data/dpo.csv"
+    dpo_val: "data/val_dpo.csv"
+    dpo_test: "data/test.csv"
+    personas_path: "personas/personas_all.json"
+    prompt_templates_dir: "prompt_templates/data_generation"
+      # Set to true to use rationale data format (hypotheses/final_3/rationale/)
+      # When true, the system prompt includes per-sample quality guidance and examples.
+    use_rationale: true
+    rationale_dpo_train: "data/rationale/cl_data.csv"
+    rationale_dpo_val: "data/rationale/val_dpo.csv"
+    rationale_dpo_test: "data/rationale/test.csv"
+    rationale_sft_train: "data/rationale/sft_train.csv"
+    rationale_sft_val: "data/rationale/val_sft.csv"
+    rationale_sft_test: "data/rationale/test.csv"
+
+# Model architecture configuration
+model:
+  model_name: Qwen/Qwen3-4B #meta-llama/Llama-3.2-3B-Instruct
+  lora_rank: 64
+  lora_alpha: 16.0
+  lora_dropout: 0.1
+  cache_dir: "model_cache"
+  use_unsloth: false
+
+# Training hyperparameters
+training:
+  learning_rate: 0.000001 # 5e-7
+  lr_scheduler: "cosine"
+  weight_decay: 0.01
+  warmup_ratio: 0.05
+  max_length: 20000
+  gradient_checkpointing: false
+  beta: 0.3
+  batch_size: 1
+  max_epochs: 4
+  seed: 42
+  baseline:
+    strategy: "sft+dpo" #"sft+dpo"
+    adapter_path: checkpoints/dpo-new-10-r64-4B/checkpoint-32/train_lora #checkpoints/cl-domain-data-rigorous-efficient-llama3.2-3B/final_adapter/train_lora #checkpoints/dpo-llama3.2-3B/final_adapter/train_lora #checkpoints/sft-phi3.5-1/final_adapter #checkpoints/dpo-new-5-r64-1.7B/final_adapter/train_lora #checkpoints/checkpoint-400 #checkpoints/sft-new-2/final_adapter
+    cl_adapter_path: checkpoints/dpo-llama3.2-3B/final_adapter/train_lora #checkpoints/dpo-new-10-r64-4B/checkpoint-32/train_lora
+    precompute_ref_log_probs: true
+
+# Logging and checkpointing configuration
+logging:
+  log_dir: "logs"
+  checkpoint_dir: "checkpoints"
+  save_top_k: 2
+  early_stopping_patience: 3  # Set to integer to enable, null to disable
+  wandb_project: "personalization-dpo"
+  wandb_entity: null  # Set to your W&B team/username
+  wandb_run_name: gen-cl-efficient-rationale-qwen #generate-cl-rigorous-sota-domain-data-efficient-llama3.2-3B #-data-efficient #generate-cl-sota-efficient-rigorous-data-domain-llama3.2-3B # #cl-sota-efficient-rigorous-llama3.2-3B #generate-sft-10-qwen3-4B-full #generate-cl-data-llama3.2-3B-full #generate-sft-llama3.2-3B-full #generate-dpo-phi3.5-1 #generate_cl-data #dpo-new-10-r64-4B #sft-new-10-r64-4B #generate_dpo-old-full-2 #dpo-new-9.1-r64-1.7B #"sft-new-9-r64-1.7B" #"cl_data-new-1-r64-1.7B" #"dpo-new-1-r64-1.7B"   # Auto-generated if null
+  wandb_tags: ['new-data-2']  # e.g., ["experiment1", "baseline"]
+
+# Evaluation configuration
+evaluation:
+  personalized_checkpoint: checkpoints/train-cl-efficient-rationale-qwen/final_adapter/train_lora #checkpoints/cl-domain-llama3.2-3B/final_adapter/train_lora #checkpoints/sft-new-10-r64-4B/final_adapter #checkpoint-32/train_lora #checkpoints/cl-data-llama3.2-3B/final_adapter/train_lora #checkpoints/dpo-llama3.2-3B/final_adapter/train_lora #checkpoints/dpo-phi3.5-1/final_adapter/train_lora #checkpoints/dpo-new-10-r64-4B/checkpoint-32/train_lora #checkpoints/dpo-new-5-r64-1.7B/final_adapter/ #checkpoints/dpo-new-5-r64-1.7B/final_adapter/train_lora # Path to checkpoint file, null for untrained model
+  max_new_tokens: 4096 
+  top_p: 0.95 #   llama: "temperature": 0.6, "top_p": 0.9, 
+  top_k: 20   # qwen3: "temperature": 0.6, "top_p": 0.95, "top_k": 20, "min_p": 0
+  min_p: 0
+  temperature: 0.6 #    Temperature: 0.0-2.0 (default 1.0)
+  device: "cuda"
+  # Judge provider: "openai" | "deepseek" | "gemini"
+  judge_provider: "openai"
+  # Model name override. Leave null to use the provider default:
+  #   openai   → gpt-4o
+  #   deepseek → deepseek-chat
+  #   gemini   → gemini-2.5-pro
+  judge_model: null
+  env_file: ".env"
+  output_dir: "eval_results"
+  eval: true
+  n_few_shots: 3
+  # Batch size for generation during eval (independent of training.batch_size).
+  # A 95 GB H100 with two Qwen3-1.7B models can comfortably handle 16.
+  eval_batch_size: 10
+  # Set to true to only generate and save responses to CSV, without invoking the LLM judge.
+  generation_only: true
+  # Set to true to only generate trained + trained few-shot responses (skips base model entirely).
+  train_only: true
+  # Gemini / Vertex AI (only required when judge_provider: "gemini")
+  gemini_project_id:  "" # e.g. "my-gcp-project-id"
+  gemini_location: "global"

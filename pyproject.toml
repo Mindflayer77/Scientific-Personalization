@@ -1,0 +1,67 @@
+[project]
+name = "personalization"
+version = "0.1.0"
+description = ""
+
+
+dependencies = [
+    # Core training & fine-tuning
+    "transformers>=4.56.0",
+    "trl==0.23.0",
+    "torch",
+    "accelerate",
+    "peft",
+    "bitsandbytes",
+    "deepspeed",
+    "unsloth",
+    "liger-kernel",
+    # Data & logging
+    "datasets",
+    "huggingface-hub",
+    "wandb",
+    "tensorboard",
+    # LLM APIs & inference
+    "openai",
+    "google-genai>=1.0.0",
+    "httpx",
+    # LangChain ecosystem
+    "langchain-openai",
+    "langchain-core",
+    "langchain-google-genai",
+    # Data science & NLP
+    "numpy",
+    "pandas",
+    "scipy",
+    "scikit-learn",
+    "nltk",
+    "sentence-transformers",
+    "sacrebleu",
+    "bert-score",
+    "keybert",
+    "umap-learn",
+    # Evaluation
+    "ragas",
+    # Visualization
+    "matplotlib",
+    "seaborn",
+    # Databases & retrieval
+    "neo4j",
+    "weaviate-client",
+    # Utilities
+    "dotenv",
+    "pydantic",
+    "Jinja2",
+    "PyYAML",
+    "tqdm",
+    "json-repair",
+]
+
+[project.optional-dependencies]
+dev = ["black", "isort"]
+
+[build-system]
+requires = ["setuptools>=61.0.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages]
+find = {where = ["src"]}

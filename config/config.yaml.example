@@ -1,0 +1,78 @@
+models:
+  embedding_model: "Qwen/Qwen3-Embedding-8B"
+  reranker_model: "Qwen/Qwen3-Reranker-8B" # "jinaai/jina-reranker-v3"
+  generation_model: Qwen/Qwen3.5-122B-A10B-FP8 # Qwen/Qwen3-4B #"" #"gemini-3-flash-preview" #"gemini-2.5-pro" #Qwen/Qwen3-32B"
+  vllm_api_url: "http://localhost"
+  vllm_api_key: "EMPTY"  # vLLM doesn't require a key
+  embedder_port: 8001
+  reranker_port: 8002
+  generator_port: 8003  # vLLM port for the hypothesis generation model
+
+weaviate:
+  host: "localhost"
+  port: 8080
+  collection: "ResearchPapers"
+  doc_types: ["CHUNK"]
+  mode: local
+  
+inference: 
+  temperature: 1
+  top_p: 0.95
+  top_k: 20
+  presence_penalty: 1.5
+  repetition_penalty: 1
+  min_p: 0
+  max_tokens: 15000
+  max_model_len: -1 
+  batch_size: 16
+  batch_size_encode: 25000
+  semaphore_size: 50 # Adjust based on GPU memory
+  logprobs_top_k: 20  # Number of top-token alternatives to save; 0 to disable
+  reasoning_parser: qwen3 # Leave empty if not using a reasoning model. Supported parsers https://docs.vllm.ai/en/latest/features/reasoning_outputs/#supported-models
+
+retrieval:
+  top_k: 70
+  rerank_top_k: 2
+  hybrid_alpha: 0.8
+  reranker_use_instruction: False
+  query_source: "subqueries" #"original" "subqueries"
+  mode: "dense" #"dense"
+
+paths:
+  base_path: "~/disk"
+  base_path_agents: "~/disk/Agents"
+
+  data_dir: "data"
+  articles_dir: "articles" #"graph/data"
+  personas_dir: "personas_2"
+  hypotheses_dir: "hypotheses"
+  prompts_dir: "prompts"
+  prompts_dir_agents: "data/prompts"
+  embeddings_dir: "embeddings"
+  models_dir: "models"
+  cache_dir: ".cache_2"
+  compile_cache_dir: "compile_cache"
+  
+files:
+  chunks: "paper_chunks_v3.csv"
+  index: "chunks"
+  prompts: 'dpo_new_prompts_qwen3.5.csv' #sft_prompts_qwen3.5-122B-A10B-fp8.csv
+  concepts: dpo_concepts_from_prompts_qwen3.5.csv #"concepts_from_prompts_gemini-3-flash-preview.csv"
+  retrieved_context: "new_context_dpo_chunk_top_70_rtop_2_dense_subquery.csv" #"context_dpo_gemini-3-flash-preview.csv"
+  done_prompts: "done_prompts.csv"
+  prompt_embeddings: "prompts_embedded.pkl"
+  personas: "personas_all.json"
+  pairs: "splits_new/dpo.csv"
+
+  taxonomy_phase1: "taxonomy_phase1_gpt-5.1.json" 
+  taxonomy_phase2: "taxonomy_phase2_gemini-3-flash-preview.jsonl"
+  taxonomy_phase3: "taxonomy_phase3_Qwen3-32B.jsonl"
+  filtered_taxonomy_phase2: "filtered_taxonomy_phase2_Qwen3-32B.jsonl"
+
+  prompt_topics: "taxonomy_phase2_gemini-3-flash-preview.jsonl"
+  hypotheses: "dpo_new_hypotheses_qwen3.5.csv"
+ #"context_inspection_jina-reranker-v3_gemini-2.5-pro.csv"
+
+hardware:
+  num_gpus: 4
+  gpu_memory_utilization: 0.95
