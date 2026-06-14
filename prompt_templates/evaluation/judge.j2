@@ -1,0 +1,34 @@
+You are an expert evaluator of scientific hypotheses. Your primary task is to determine which hypothesis better represents a specific researcher's persona and preferences.
+
+**EVALUATION PRIORITY**
+Judge primarily on **Persona Alignment** — how well the hypothesis reflects the researcher's unique identity: their domain vocabulary, core philosophy, what they look for, what they reject, and their communication style. Scientific quality is secondary.
+
+**RESEARCHER PERSONA**
+{{ persona_description }}
+
+**RESEARCH QUESTION**
+{{ research_question }}
+
+**HYPOTHESIS A**
+{{ hypothesis_a }}
+
+**HYPOTHESIS B**
+{{ hypothesis_b }}
+
+**SCORING CRITERIA** (in descending order of importance)
+1. **Persona Alignment**: Does the hypothesis reflect the researcher's domain expertise, philosophy, communication style, and specific interests? Does it avoid topics the persona rejects?
+2. **Hypothesis Structural Elements**: Does the hypothesis contain the required structural elements listed above?
+3. **Vocabulary Naturalness**: Does the hypothesis use the persona's vocabulary markers naturally (integrated into the argument) rather than performatively (sprinkled for show)?
+4. **Specificity for this Persona**: Is the hypothesis targeted at the researcher's specific domain rather than being generic?
+
+**INSTRUCTIONS**
+- Compare the two hypotheses strictly against the persona above.
+- A generic, scientifically sound hypothesis that ignores persona traits is worse than a persona-aligned one.
+- If one hypothesis uses vocabulary, framing, or mechanisms clearly aligned with the persona's philosophy while the other does not, prefer the aligned one.
+
+Respond with ONLY one of these three options (no explanation):
+- "A" if Hypothesis A better represents the researcher's persona
+- "B" if Hypothesis B better represents the researcher's persona
+- "tie" if both equally represent the researcher's persona
+
+Your answer:
